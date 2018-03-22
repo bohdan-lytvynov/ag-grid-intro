@@ -14,23 +14,29 @@ class GridIntro extends Component {
 
   }
 
+  successRate(values) {
+    const successLaunches = values.reduce( (sum, bool) => sum + Number(bool), 0)
+
+    if (values.length === 0) return 'No laynches';
+
+    return `${successLaunches * 100 / values.length}%`;
+  }
+
   onGridReady(params) {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
 
-    fetch('https://api.spacexdata.com/v2/rockets')
+    fetch('https://api.spacexdata.com/v2/launches/all')
       .then(response => response.json())
       .then(data => this.gridApi.setRowData(data))
 
-    this.gridApi.sizeColumnsToFit();
   }
 
   createColumnDefs() {
     return [
-      {headerName: "Name", field: "name"},
-      {headerName: "Country", field: "country"},
-      {headerName: "Company", field: "company"},
-      {headerName: "Cost per launch", field: "cost_per_launch"}
+      {headerName: "Rocket Name", field: "rocket.rocket_name", rowGroup: true},
+      {headerName: "Launch year", field: "launch_year", pivot: true},
+      {headerName: "Success rate", field: "launch_success", aggFunc: this.successRate},
     ];
   }
 
@@ -39,10 +45,9 @@ class GridIntro extends Component {
       <div className="ag-fresh">
       <h1>Simple ag-Grid React Example</h1>
       <AgGridReact
-      // properties
+      pivotMode={true}
+      enableColResize={true}
       columnDefs={this.state.columnDefs}
-
-      // events
       onGridReady={this.onGridReady}>
       </AgGridReact>
       </div>
