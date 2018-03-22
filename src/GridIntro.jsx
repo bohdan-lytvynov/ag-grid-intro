@@ -18,7 +18,7 @@ class GridIntro extends Component {
     this.gridApi = params.api;
     this.columnApi = params.columnApi;
 
-    fetch('https://api.spacexdata.com/v2/rockets')
+    fetch('https://api.spacexdata.com/v2/capsules')
       .then(response => response.json())
       .then(data => this.gridApi.setRowData(data))
 
@@ -28,9 +28,34 @@ class GridIntro extends Component {
   createColumnDefs() {
     return [
       {headerName: "Name", field: "name"},
-      {headerName: "Country", field: "country"},
-      {headerName: "Company", field: "company"},
-      {headerName: "Cost per launch", field: "cost_per_launch"}
+      {headerName: "Crew capacity", field: "crew_capacity"},
+      {headerName: "Orbit during year", field: "orbit_duration_yr"},
+      {
+        headerName: 'Heat Shield',
+        children: [
+          {headerName: "Material", field: "heat_shield.material"},
+          {headerName: "Dev partner", field: "heat_shield.dev_partner"},
+        ]
+      },
+      {
+        headerName: 'Trunk',
+        children: [
+          {
+            headerName: "Trunk Volume", 
+            children: [
+              {headerName: "Cubic meters", field: "trunk.trunk_volume.cubic_meters"},
+              {headerName: "Cubic feets", field: "trunk.trunk_volume.cubic_feet"},
+            ]
+          },
+          {
+            headerName: "Cargo", 
+            children: [
+              {headerName: "Solar array", field: "trunk.cargo.solar_array"},
+              {headerName: "Unpressurized Cargo", field: "trunk.cargo.unpressurized_cargo"}
+            ]
+          },
+        ]
+      }
     ];
   }
 
