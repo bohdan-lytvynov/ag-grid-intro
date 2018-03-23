@@ -28,7 +28,7 @@ module.exports = {
       }
     ]
   },
-  devtool: 'cheap-source-map',
+  devtool: 'source-map',
   externals: {
     react: 'React',
     'react-dom':  'ReactDOM'
