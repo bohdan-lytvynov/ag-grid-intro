@@ -20,23 +20,11 @@ function dateSetter(params) {
 }
 
 function dateFormatter(params) {
-  return params.value.toUTCString()
+  return params.value.getFullYear()
 }
 
 function dateParser(params) {
   return new Date(params.newValue)
-}
-
-function processCellForClipboard(params) {
-  if (Array.isArray(params.value)) {
-    return params.value.length
-  } else {
-    return params.value
-  }
-}
-
-function processCellFromClipboard(params) {
-  return params.value
 }
 
 class GridIntro extends Component {
@@ -45,10 +33,7 @@ class GridIntro extends Component {
 
     this.state = {
       columnDefs: this.createColumnDefs(),
-      defaultColDef: { editable: true },
-      sendToClipboard: function(params) {
-        console.log("send to clipboard called with data:", params.data);
-      }
+      defaultColDef: { editable: true }
     }
 
   }
@@ -90,10 +75,6 @@ class GridIntro extends Component {
 
       // events
       onGridReady={this.onGridReady}
-      //sendToClipboard={this.state.sendToClipboard}
-      processCellForClipboard={processCellForClipboard}
-      processCellFromClipboard={processCellFromClipboard}
-      enableRangeSelection={true}
       >
       </AgGridReact>
       </div>
