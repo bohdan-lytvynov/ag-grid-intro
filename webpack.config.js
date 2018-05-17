@@ -2,6 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
+  mode: 'development',
   entry: "./src/app.jsx",
   output: {
     filename: '[name].bundle.js',
@@ -28,7 +29,7 @@ module.exports = {
       }
     ]
   },
-  devtool: 'source-map',
+  devtool: 'eval-source-map',
   externals: {
     react: 'React',
     'react-dom':  'ReactDOM'

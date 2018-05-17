@@ -11,16 +11,12 @@ function customersGetter(params) {
     [])
 }
 
-function sendToClipboard(params) {
-  console.log(data)
-}
-
 function dateGetter(params) {
   return new Date(params.data.launch_date_unix * 1000)
 }
 
 function dateSetter(params) {
-  params.data.launch_date_unix = params.newValue
+  params.data.launch_date_unix = params.newValue.getTime() / 1000
 }
 
 function dateFormatter(params) {
@@ -31,9 +27,16 @@ function dateParser(params) {
   return new Date(params.newValue)
 }
 
-function processCellForClipboard() {
-  console.log('processCellForClipboard')
-  return 1
+function processCellForClipboard(params) {
+  if (Array.isArray(params.value)) {
+    return params.value.length
+  } else {
+    return params.value
+  }
+}
+
+function processCellFromClipboard(params) {
+  return params.value
 }
 
 class GridIntro extends Component {
@@ -44,8 +47,7 @@ class GridIntro extends Component {
       columnDefs: this.createColumnDefs(),
       defaultColDef: { editable: true },
       sendToClipboard: function(params) {
-        console.log("send to clipboard called with data:");
-        console.log(params.data);
+        console.log("send to clipboard called with data:", params.data);
       }
     }
 
@@ -59,22 +61,22 @@ class GridIntro extends Component {
       .then(response => response.json())
       .then(data => this.gridApi.setRowData(data))
 
-    //this.gridApi.sizeColumnsToFit();
+    this.gridApi.sizeColumnsToFit();
   }
 
   createColumnDefs() {
     return [
-      {headerName: "Flight Number", field: "flight_number"},
+      {headerName: "Flight Number", field: "flight_number", editable: true},
       {headerName: "Rocket Name", field: "rocket.rocket_name"},
-      //{headerName: "Customer", valueGetter: customersGetter, editable:true},
-      //{
-      //  headerName: "Launch date",
-      //  editable: true,
-      //  valueGetter: dateGetter,
-      //  valueSetter: dateSetter,
-      //  valueFormatter: dateFormatter,
-      //  valueParser: dateParser
-      //}
+      {headerName: "Customer", valueGetter: customersGetter, editable:true},
+      {
+        headerName: "Launch date",
+        editable: true,
+        valueGetter: dateGetter,
+        valueSetter: dateSetter,
+        valueFormatter: dateFormatter,
+        valueParser: dateParser
+      }
     ];
   }
 
@@ -88,7 +90,10 @@ class GridIntro extends Component {
 
       // events
       onGridReady={this.onGridReady}
-      sendToClipboard={this.state.sendToClipboard}
+      //sendToClipboard={this.state.sendToClipboard}
+      processCellForClipboard={processCellForClipboard}
+      processCellFromClipboard={processCellFromClipboard}
+      enableRangeSelection={true}
       >
       </AgGridReact>
       </div>
