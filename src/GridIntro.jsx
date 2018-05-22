@@ -3,15 +3,21 @@
 import React, {Component} from 'react'
 import {AgGridReact} from 'ag-grid-react';
 import './grid-intro.css'
+import CostRenderer from './CostRenderer'
 
+function costRenderer({value}) {
+  return `<div>$ ${value}</div>`
+}
 class GridIntro extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      columnDefs: this.createColumnDefs()
+      columnDefs: this.createColumnDefs(),
+      comoponents: {
+        costRenderer: CostRenderer
+      }
     }
-
   }
 
   onGridReady(params) {
@@ -30,7 +36,8 @@ class GridIntro extends Component {
       {headerName: "Name", field: "name"},
       {headerName: "Country", field: "country"},
       {headerName: "Company", field: "company"},
-      {headerName: "Cost per launch", field: "cost_per_launch"}
+      {headerName: "Cost per launch", field: "cost_per_launch", cellRenderer: costRenderer},
+      {headerName: "Cost per launch", field: "cost_per_launch", cellRenderer: CostRenderer}
     ];
   }
 
@@ -41,6 +48,7 @@ class GridIntro extends Component {
       <AgGridReact
       // properties
       columnDefs={this.state.columnDefs}
+      components={this.state.components}
 
       // events
       onGridReady={this.onGridReady}>
