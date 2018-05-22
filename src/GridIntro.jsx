@@ -12,6 +12,26 @@ class GridIntro extends Component {
       columnDefs: this.createColumnDefs()
     }
 
+    this.onGridReady = this.onGridReady.bind(this)
+    this.addEmptyRow = this.addEmptyRow.bind(this)
+    this.removeLastRow = this.removeLastRow.bind(this)
+  }
+
+  getEmptyRow() {
+    return {
+      name: '',
+      coutnry: ''
+    }
+  }
+  
+  addEmptyRow() {
+    this.gridApi.updateRowData({ add: [{}] })
+  }
+
+  removeLastRow() {
+    const indexOfLastRow = this.gridApi.getLastDisplayedRow()
+    const lastRow = this.gridApi.getDisplayedRowAtIndex(indexOfLastRow).data
+    this.gridApi.updateRowData({ remove: [lastRow] })
   }
 
   onGridReady(params) {
@@ -38,6 +58,8 @@ class GridIntro extends Component {
     return (
       <div className="ag-fresh">
       <h1>Simple ag-Grid React Example</h1>
+      <button onClick={this.addEmptyRow}>Add empty row</button>
+      <button onClick={this.removeLastRow}>Remove last row</button>
       <AgGridReact
       // properties
       columnDefs={this.state.columnDefs}
